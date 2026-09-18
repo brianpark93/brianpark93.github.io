@@ -32,3 +32,42 @@ h1, h2 {
 ul {
   padding-left: 20px;
 }
+
+/* --- publication list + JCR badges ------------------------------------- */
+.pub-list li {
+  margin-bottom: 0.85em;
+}
+
+.badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  vertical-align: 0.05em;
+  margin-left: 0.15em;
+}
+
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 1px 9px;
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.badge-q1 { background: #e4f1e9; color: #17603a; border-color: #b6d9c4; }
+.badge-q2 { background: #e5edf8; color: #1f4e8c; border-color: #bcd2ea; }
+.badge-q3,
+.badge-q4 { background: #f1f1f1; color: #555; border-color: #dcdcdc; }
+.badge-if { background: #f3f4f6; color: #3a4552; border-color: #dce0e6; }
+.badge-kci { background: #fbf2e4; color: #85591a; border-color: #ead7b4; }
+.badge-status { background: #fdeceb; color: #9a3129; border-color: #f2c9c5; }
+
+.metrics-note {
+  font-size: 0.82em;
+  color: #666;
+  margin-top: -0.4em;
+}
