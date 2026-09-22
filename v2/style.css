@@ -103,10 +103,12 @@ body {
     justify-content: center;
   }
   main { grid-column: 2; }
-  .pad {
+  /* .shell > .pad, not .pad: the base rule further down the file would
+     otherwise win on source order and leave the note back in the grid */
+  .shell > .pad {
     position: fixed;
-    top: 28px;
-    left: 28px;
+    top: 24px;
+    left: 10px;
     width: var(--pad-w);
   }
 }
