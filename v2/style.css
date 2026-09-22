@@ -21,6 +21,7 @@
   --mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
 
   --pad-w:  268px;
+  --measure: 868px;   /* reading column width */
   --line:   28px;   /* notepad rule pitch — nav items must match this */
 }
 
@@ -58,19 +59,19 @@ body {
     repeating-linear-gradient(90deg, rgba(20, 45, 32, .055) 0 1px, transparent 1px 34px);
   -webkit-mask-image: linear-gradient(90deg,
     rgba(0,0,0,1)    0,
-    rgba(0,0,0,1)    calc(50% - 660px),
-    rgba(0,0,0,.10)  calc(50% - 540px),
+    rgba(0,0,0,1)    calc(50% - 600px),
+    rgba(0,0,0,.10)  calc(50% - 470px),
     rgba(0,0,0,.06)  50%,
-    rgba(0,0,0,.10)  calc(50% + 540px),
-    rgba(0,0,0,1)    calc(50% + 660px),
+    rgba(0,0,0,.10)  calc(50% + 470px),
+    rgba(0,0,0,1)    calc(50% + 600px),
     rgba(0,0,0,1)    100%);
           mask-image: linear-gradient(90deg,
     rgba(0,0,0,1)    0,
-    rgba(0,0,0,1)    calc(50% - 660px),
-    rgba(0,0,0,.10)  calc(50% - 540px),
+    rgba(0,0,0,1)    calc(50% - 600px),
+    rgba(0,0,0,.10)  calc(50% - 470px),
     rgba(0,0,0,.06)  50%,
-    rgba(0,0,0,.10)  calc(50% + 540px),
-    rgba(0,0,0,1)    calc(50% + 660px),
+    rgba(0,0,0,.10)  calc(50% + 470px),
+    rgba(0,0,0,1)    calc(50% + 600px),
     rgba(0,0,0,1)    100%);
 }
 
@@ -79,11 +80,26 @@ body {
   z-index: 1;
   display: grid;
   grid-template-columns: var(--pad-w) minmax(0, 1fr);
-  gap: 42px;
-  max-width: 1180px;
+  gap: 44px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 46px 32px 96px;
+  padding: 46px 28px 96px;
   align-items: start;
+}
+
+/* Once there is room, a matching empty track on the right puts the reading
+   column dead centre in the window and lets the notepad sit out in the margin
+   rather than beside the text. */
+@media (min-width: 1480px) {
+  .shell {
+    grid-template-columns: 300px minmax(0, var(--measure)) 300px;
+    gap: 40px;
+    max-width: calc(var(--measure) + 720px);
+    padding-left: 20px;
+    padding-right: 20px;
+    justify-content: center;
+  }
+  .pad { justify-self: start; width: var(--pad-w); }
 }
 
 /* ------------------------------------------------------------------ notepad */
@@ -252,7 +268,7 @@ main { min-width: 0; }
   font-size: 19px;
   line-height: 1.58;
   color: var(--ink-soft);
-  max-width: 62ch;
+  max-width: 66ch;
   margin: 0 0 22px;
 }
 
