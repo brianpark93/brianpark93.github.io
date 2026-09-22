@@ -16,6 +16,35 @@
 
 <div class="grid" aria-hidden="true"></div>
 
+<!-- ============================================================== stage -->
+<section class="stage" id="stage" aria-label="Research highlights">
+  <div class="stage__inner">
+    <button class="stage__nav stage__nav--prev" type="button" aria-label="Previous clip">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 7 12l8 8"/></svg>
+    </button>
+
+    <figure class="stage__frame">
+      <div class="stage__media" id="stageMedia"></div>
+      <figcaption class="stage__cap">
+        <strong id="stageTitle"></strong>
+        <span id="stageNote"></span>
+      </figcaption>
+    </figure>
+
+    <button class="stage__nav stage__nav--next" type="button" aria-label="Next clip">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>
+    </button>
+  </div>
+
+  <div class="stage__foot">
+    <div class="stage__dots" id="stageDots" role="tablist" aria-label="Choose clip"></div>
+    <a class="stage__scroll" href="#about">
+      <span>scroll</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </a>
+  </div>
+</section>
+
 <div class="shell">
 
   <!-- ============================================================ notepad -->
@@ -246,6 +275,116 @@
 </div>
 
 <script>
+/* ---------------------------------------------------------------------------
+   Stage: the reel of simulation clips at the top of the page.
+
+   Edit CLIPS to add, remove or re-label a clip -- nothing else needs changing.
+   Encode new ones the way the existing four were:
+     ffmpeg -i in.mp4 -vf "scale='min(1000,iw)':-2" -c:v libx264 -crf 27             -pix_fmt yuv420p -an -movflags +faststart media/out.mp4
+     ffmpeg -ss 0.3 -i media/out.mp4 -frames:v 1 media/out.jpg
+   --------------------------------------------------------------------------- */
+var CLIPS = [
+  {
+    file:  'blast_tnt600',
+    title: 'RC slab under close-in blast',
+    note:  'LS-DYNA · CSCM concrete · 0.6 kg TNT at 0.4 m standoff'
+  },
+  {
+    file:  'masonry_PGA066',
+    title: 'Unreinforced masonry under El Centro 1940 NS',
+    note:  'LS-DYNA micro-model · CSCM mortar joints · PGA 0.66 g'
+  },
+  {
+    file:  'air_part_24fps',
+    title: 'Free-air detonation in an ALE air domain',
+    note:  'LS-DYNA · arbitrary Lagrangian–Eulerian · particle view'
+  },
+  {
+    file:  'shake_ext_24fps',
+    title: 'Concrete cylinder under compression',
+    note:  'LS-DYNA · continuous surface cap model'
+  }
+];
+
+(function () {
+  var media   = document.getElementById('stageMedia');
+  var dots    = document.getElementById('stageDots');
+  var titleEl = document.getElementById('stageTitle');
+  var noteEl  = document.getElementById('stageNote');
+  var stage   = document.getElementById('stage');
+  if (!media || !CLIPS.length) return;
+
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var index = Math.floor(Math.random() * CLIPS.length);   // a different one each visit
+  var current = null;
+
+  function show(i, animate) {
+    index = (i + CLIPS.length) % CLIPS.length;
+    var clip = CLIPS[index];
+
+    var video = document.createElement('video');
+    video.src = 'media/' + clip.file + '.mp4';
+    video.poster = 'media/' + clip.file + '.jpg';
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.preload = 'auto';
+    if (!calm) video.autoplay = true;
+
+    var old = current;
+    current = video;
+    media.appendChild(video);
+    if (!calm) { var pl = video.play(); if (pl && pl.catch) pl.catch(function () {}); }
+
+    function reveal() {
+      video.classList.add('is-in');
+      if (old) { old.pause(); old.remove(); }
+    }
+    if (animate === false) reveal();
+    else if (video.readyState >= 2) requestAnimationFrame(reveal);
+    else video.addEventListener('loadeddata', reveal, { once: true });
+
+    titleEl.textContent = clip.title;
+    noteEl.textContent  = clip.note;
+    Array.prototype.forEach.call(dots.children, function (b, n) {
+      b.setAttribute('aria-selected', String(n === index));
+    });
+  }
+
+  CLIPS.forEach(function (clip, n) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-label', clip.title);
+    b.addEventListener('click', function () { show(n); });
+    dots.appendChild(b);
+  });
+
+  var prev = document.querySelector('.stage__nav--prev');
+  var next = document.querySelector('.stage__nav--next');
+  if (prev) prev.addEventListener('click', function () { show(index - 1); });
+  if (next) next.addEventListener('click', function () { show(index + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (e.key === 'ArrowLeft')  show(index - 1);
+    if (e.key === 'ArrowRight') show(index + 1);
+  });
+
+  show(index, false);
+
+  // the notepad is fixed, so keep it out of the way until the stage is passed
+  if (stage && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      document.body.classList.toggle('past-stage', !entries[0].isIntersecting);
+    }, { rootMargin: '-45% 0px 0px 0px' }).observe(stage);
+  } else {
+    document.body.classList.add('past-stage');
+  }
+})();
+
 (function () {
   var links = Array.prototype.slice.call(document.querySelectorAll('#pad-nav a'));
   var targets = links

@@ -507,3 +507,182 @@ footer.foot a { color: var(--ink-soft); }
   html { scroll-behavior: auto; }
   * { transition: none !important; }
 }
+
+/* =========================================================================
+   Stage -- the reel of simulation clips that opens the page. One is picked
+   at random on load; the arrows, the dots and the keyboard move between them.
+   ========================================================================= */
+
+.stage {
+  position: relative;
+  z-index: 1;
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 26px;
+  padding: 40px 24px 28px;
+}
+
+.stage__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.stage__frame {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.stage__media {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.stage__media video {
+  display: block;
+  max-width: 100%;
+  max-height: 62vh;
+  border-radius: 14px;
+  background: #0f1512;
+  box-shadow:
+    0 2px 4px rgba(20, 40, 30, .06),
+    0 22px 50px -26px rgba(20, 40, 30, .55);
+  opacity: 0;
+  transform: scale(.985);
+  transition: opacity .42s ease, transform .42s ease;
+}
+.stage__media video.is-in { opacity: 1; transform: none; }
+
+.stage__cap {
+  text-align: center;
+  max-width: 62ch;
+}
+.stage__cap strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -.005em;
+  color: var(--ink);
+}
+.stage__cap span {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+/* arrows */
+.stage__nav {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .8);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  color: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(20, 40, 30, .05), 0 10px 24px -16px rgba(20, 40, 30, .5);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.stage__nav svg {
+  width: 21px; height: 21px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+.stage__nav:hover {
+  background: #fff;
+  border-color: rgba(34, 82, 63, .35);
+  box-shadow: 0 2px 4px rgba(20, 40, 30, .07), 0 16px 30px -18px rgba(20, 40, 30, .6);
+}
+.stage__nav--prev:hover { transform: translateX(-3px); }
+.stage__nav--next:hover { transform: translateX(3px); }
+.stage__nav:active { transform: scale(.94); }
+.stage__nav:focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 3px; }
+
+/* dots + scroll cue */
+.stage__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.stage__dots { display: flex; gap: 9px; }
+.stage__dots button {
+  width: 30px;
+  height: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(20, 45, 32, .16);
+  cursor: pointer;
+  transition: background .2s ease, width .2s ease;
+}
+.stage__dots button:hover { background: rgba(20, 45, 32, .32); }
+.stage__dots button[aria-selected="true"] { background: var(--accent); width: 44px; }
+.stage__dots button:focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 3px; }
+
+.stage__scroll {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration: none;
+}
+.stage__scroll svg {
+  width: 15px; height: 15px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  animation: nudge 2.1s ease-in-out infinite;
+}
+.stage__scroll:hover { color: var(--accent); }
+@keyframes nudge {
+  0%, 100% { transform: translateY(0); opacity: .55; }
+  50%      { transform: translateY(4px); opacity: 1; }
+}
+
+/* the notepad would sit on top of the stage, so it only appears once the
+   reader has scrolled past it */
+.shell > .pad {
+  transition: opacity .32s ease, transform .32s ease;
+}
+body:not(.past-stage) .shell > .pad {
+  opacity: 0;
+  transform: translateX(-14px);
+  pointer-events: none;
+}
+
+@media (max-width: 880px) {
+  .stage { min-height: 74vh; padding: 28px 14px 22px; gap: 18px; }
+  .stage__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
+  .stage__nav { width: 42px; height: 42px; }
+  .stage__nav svg { width: 17px; height: 17px; }
+  .stage__media video { max-height: 46vh; }
+  .stage__cap strong { font-size: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage__scroll svg { animation: none; }
+  .stage__media video { transition: none; }
+}
