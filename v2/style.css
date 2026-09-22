@@ -92,17 +92,23 @@ body {
    rather than beside the text. */
 @media (min-width: 1480px) {
   .shell {
-    /* the right-hand track is the shorter of the two: the notepad hangs off
-       the left, so trimming the right moves the whole block back towards the
-       middle of the window and stops it leaning */
-    grid-template-columns: 272px minmax(0, var(--measure)) 184px;
+    /* matching tracks either side put the reading column dead centre in the
+       window; the notepad is lifted out of the grid and pinned to the far
+       left, so track 1 is only holding the space open */
+    grid-template-columns: 272px minmax(0, var(--measure)) 272px;
     gap: 40px;
-    max-width: calc(var(--measure) + 576px);
+    max-width: calc(var(--measure) + 664px);
     padding-left: 20px;
     padding-right: 20px;
     justify-content: center;
   }
-  .pad { justify-self: start; width: var(--pad-w); }
+  main { grid-column: 2; }
+  .pad {
+    position: fixed;
+    top: 28px;
+    left: 28px;
+    width: var(--pad-w);
+  }
 }
 
 /* ------------------------------------------------------------------ notepad */
