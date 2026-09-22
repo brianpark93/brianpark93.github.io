@@ -290,6 +290,11 @@ var CLIPS = [
     note:  'LS-DYNA · CSCM concrete · 0.6 kg TNT at 0.4 m standoff'
   },
   {
+    file:  'blast_tnt600_top',
+    title: 'RC slab under close-in blast — loaded face',
+    note:  'LS-DYNA · CSCM concrete · 0.6 kg TNT at 0.4 m standoff'
+  },
+  {
     file:  'masonry_PGA066',
     title: 'Unreinforced masonry under El Centro 1940 NS',
     note:  'LS-DYNA micro-model · CSCM mortar joints · PGA 0.66 g'
@@ -356,13 +361,21 @@ var CLIPS = [
     return Math.max(w * 0.6, media.offsetWidth * 0.53);
   }
 
-  function layout() {
+  function layout(instant) {
     var d = step();
     slides.forEach(function (s, n) {
       var rel = n - index;
       if (rel >  count / 2) rel -= count;     // wrap to the shorter way round
       if (rel < -count / 2) rel += count;
       var far = Math.abs(rel) > 1;
+
+      // a slide that wraps from one end of the reel to the other must not be
+      // seen crossing the screen: it is off-screen and invisible at both ends,
+      // so move it with the transition switched off
+      var jumped = instant === true ||
+        (s.rel !== undefined && Math.abs(rel - s.rel) > 1.01);
+      s.rel = rel;
+      if (jumped) s.fig.style.transition = 'none';
 
       s.fig.dataset.rel = rel;
       s.fig.classList.toggle('is-far', far);
@@ -372,6 +385,11 @@ var CLIPS = [
       s.fig.style.transform =
         'translate(calc(-50% + ' + (rel * d).toFixed(1) + 'px), -50%)' +
         ' scale(' + (rel === 0 ? 1 : 0.82) + ')';
+
+      if (jumped) {
+        void s.fig.offsetWidth;          // commit it, then hand the easing back
+        s.fig.style.transition = '';
+      }
 
       if (rel === 0) {
         s.video.preload = 'auto';
@@ -414,7 +432,7 @@ var CLIPS = [
     x0 = null;
   }, { passive: true });
 
-  layout();
+  layout(true);
   // the widths are only known once the first frames are in
   slides.forEach(function (s) {
     s.video.addEventListener('loadedmetadata', layout, { once: true });
