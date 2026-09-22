@@ -516,6 +516,7 @@ footer.foot a { color: var(--ink-soft); }
 .stage {
   position: relative;
   z-index: 1;
+  overflow: hidden;          /* the neighbouring clips run past the window */
   min-height: 88vh;
   display: flex;
   flex-direction: column;
@@ -546,24 +547,49 @@ footer.foot a { color: var(--ink-soft); }
 .stage__media {
   position: relative;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  height: min(52vh, 500px);
+  perspective: 1400px;
+  /* the mask is stretched to the window so the clips that overflow the
+     column dissolve at the edges instead of being cut off */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 21%, #000 79%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 21%, #000 79%, transparent 100%);
+  -webkit-mask-size: 100vw 100%;  mask-size: 100vw 100%;
+  -webkit-mask-position: center;  mask-position: center;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
 }
 
-.stage__media video {
+/* every clip is laid out on top of the middle of the stage and then pushed
+   sideways by how far it is from the active one, so the neighbours sit
+   half-seen at the edges and slide in when the arrows are pressed */
+.stage__slide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  transition: transform .62s cubic-bezier(.22, .61, .36, 1),
+              opacity   .62s cubic-bezier(.22, .61, .36, 1),
+              filter    .62s ease;
+  will-change: transform, opacity;
+}
+
+.stage__slide video {
   display: block;
-  max-width: 100%;
-  max-height: 62vh;
+  height: min(52vh, 500px);
+  width: auto;
+  max-width: min(64vw, 820px);
   border-radius: 14px;
-  background: #0f1512;
+  background: #f3f5f4;
   box-shadow:
     0 2px 4px rgba(20, 40, 30, .06),
     0 22px 50px -26px rgba(20, 40, 30, .55);
-  opacity: 0;
-  transform: scale(.985);
-  transition: opacity .42s ease, transform .42s ease;
 }
-.stage__media video.is-in { opacity: 1; transform: none; }
+
+.stage__slide[data-rel="0"] { opacity: 1; filter: none; cursor: default; }
+.stage__slide:not([data-rel="0"]) { cursor: pointer; }
+.stage__slide[data-rel="0"] video { box-shadow: 0 3px 6px rgba(20,40,30,.07), 0 28px 60px -28px rgba(20,40,30,.6); }
+
+.stage__slide.is-far { opacity: 0; pointer-events: none; }
 
 .stage__cap {
   text-align: center;
@@ -678,7 +704,8 @@ body:not(.past-stage) .shell > .pad {
   .stage__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
   .stage__nav { width: 42px; height: 42px; }
   .stage__nav svg { width: 17px; height: 17px; }
-  .stage__media video { max-height: 46vh; }
+  .stage__media { height: 40vh; }
+  .stage__slide video { height: 40vh; max-width: 82vw; }
   .stage__cap strong { font-size: 15px; }
 }
 
