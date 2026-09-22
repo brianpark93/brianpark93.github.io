@@ -350,8 +350,10 @@ var CLIPS = [
   // how far apart the slides sit: enough that a neighbour shows at the edge
   // without crowding the middle one
   function step() {
+    // spread across the whole window: the neighbours reach the edges and are
+    // faded out there rather than sitting politely inside a column
     var w = slides[index].fig.offsetWidth || media.offsetWidth * 0.6;
-    return Math.min(w * 0.78 + 30, media.offsetWidth * 0.62);
+    return Math.max(w * 0.6, media.offsetWidth * 0.53);
   }
 
   function layout() {
