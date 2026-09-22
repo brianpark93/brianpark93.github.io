@@ -21,7 +21,7 @@
   --mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
 
   --pad-w:  268px;
-  --measure: 868px;   /* reading column width */
+  --measure: 940px;   /* reading column width */
   --line:   28px;   /* notepad rule pitch — nav items must match this */
 }
 
@@ -92,9 +92,9 @@ body {
    rather than beside the text. */
 @media (min-width: 1480px) {
   .shell {
-    grid-template-columns: 300px minmax(0, var(--measure)) 300px;
+    grid-template-columns: 272px minmax(0, var(--measure)) 272px;
     gap: 40px;
-    max-width: calc(var(--measure) + 720px);
+    max-width: calc(var(--measure) + 664px);
     padding-left: 20px;
     padding-right: 20px;
     justify-content: center;
