@@ -92,9 +92,12 @@ body {
    rather than beside the text. */
 @media (min-width: 1480px) {
   .shell {
-    grid-template-columns: 272px minmax(0, var(--measure)) 272px;
+    /* the right-hand track is the shorter of the two: the notepad hangs off
+       the left, so trimming the right moves the whole block back towards the
+       middle of the window and stops it leaning */
+    grid-template-columns: 272px minmax(0, var(--measure)) 184px;
     gap: 40px;
-    max-width: calc(var(--measure) + 664px);
+    max-width: calc(var(--measure) + 576px);
     padding-left: 20px;
     padding-right: 20px;
     justify-content: center;
