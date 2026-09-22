@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div class="grid" aria-hidden="true"></div>
+<svg id="space" aria-hidden="true"></svg>
 
 <div class="shell">
 
@@ -244,6 +244,96 @@
 </div>
 
 <script>
+/* ---------------------------------------------------------------------------
+   One-point perspective grid in the side margins.
+
+   A vanishing point sits a little outside each edge of the window. Lines of
+   constant depth march towards it in a geometric series, so their spacing
+   shrinks the further out they are, and rays fan from it. The effect is that
+   the margins read as two surfaces running away from the reader while the
+   content column stays flat and in front.
+   --------------------------------------------------------------------------- */
+(function () {
+  var svg = document.getElementById('space');
+  if (!svg) return;
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var SHELL = 1180;        // content column width, matches the CSS
+  var INK = '20, 45, 32';
+
+  function line(x1, y1, x2, y2, alpha) {
+    var el = document.createElementNS(NS, 'line');
+    el.setAttribute('x1', x1.toFixed(1)); el.setAttribute('y1', y1.toFixed(1));
+    el.setAttribute('x2', x2.toFixed(1)); el.setAttribute('y2', y2.toFixed(1));
+    el.setAttribute('stroke', 'rgba(' + INK + ',' + alpha.toFixed(3) + ')');
+    el.setAttribute('stroke-width', '1');
+    el.setAttribute('shape-rendering', 'crispEdges');
+    return el;
+  }
+
+  // One wall: everything is clipped to the margin band, so no line ever
+  // reaches the text. Depth lines run in a geometric series towards the
+  // vanishing point and the rays fan out of it.
+  function wall(side, W, H, band) {
+    var g = document.createElementNS(NS, 'g');
+    var vpy = H * 0.46;
+    var toScreen = function (x) { return side < 0 ? x : W - x; };
+    var vpx = toScreen(-0.02 * W);
+
+    var x = band, prev = null;
+    for (var i = 0; i < 60; i++) {
+      var sx = toScreen(x);
+      var gap = prev === null ? 999 : Math.abs(sx - prev);
+      if (gap < 2.4) break;                       // stop before they mass up
+      var fade = Math.min(1, gap / 20);           // thin out as they crowd
+      g.appendChild(line(sx, 0, sx, H, 0.16 * fade));
+      prev = sx;
+      x *= 0.845;
+      if (x < 1) break;
+    }
+
+    var edge = toScreen(band), rays = 13, span = H * 2.1;
+    for (var k = 0; k <= rays; k++) {
+      var y = vpy + (k / rays - 0.5) * span;
+      var t = Math.abs(k / rays - 0.5) * 2;       // 0 on the horizon, 1 at the ends
+      g.appendChild(line(vpx, vpy, edge, y, 0.13 * (0.2 + 0.8 * t)));
+    }
+    return g;
+  }
+
+  var raf = null;
+  function draw() {
+    raf = null;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var W = window.innerWidth, H = window.innerHeight;
+    if (W <= 880) return;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    var band = Math.max(70, (W - SHELL) / 2 + 34);   // margin, tucked slightly under
+    var defs = document.createElementNS(NS, 'defs');
+    defs.innerHTML =
+      '<linearGradient id="fadeL" x1="0" x2="1">' +
+        '<stop offset="0" stop-color="#fff" stop-opacity="1"/>' +
+        '<stop offset="0.62" stop-color="#fff" stop-opacity="0.75"/>' +
+        '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="fadeR" x1="1" x2="0">' +
+        '<stop offset="0" stop-color="#fff" stop-opacity="1"/>' +
+        '<stop offset="0.62" stop-color="#fff" stop-opacity="0.75"/>' +
+        '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<mask id="mL"><rect x="0" y="0" width="' + band + '" height="' + H + '" fill="url(#fadeL)"/></mask>' +
+      '<mask id="mR"><rect x="' + (W - band) + '" y="0" width="' + band + '" height="' + H + '" fill="url(#fadeR)"/></mask>';
+    svg.appendChild(defs);
+
+    var L = wall(-1, W, H, band); L.setAttribute('mask', 'url(#mL)'); svg.appendChild(L);
+    var R = wall(1, W, H, band);  R.setAttribute('mask', 'url(#mR)'); svg.appendChild(R);
+  }
+
+  function schedule() { if (raf === null) raf = requestAnimationFrame(draw); }
+  draw();
+  window.addEventListener('resize', schedule);
+})();
+
 (function () {
   var links = Array.prototype.slice.call(document.querySelectorAll('#pad-nav a'));
   var targets = links

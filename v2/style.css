@@ -43,35 +43,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Faint graph-paper grid. The mask keeps it to the side margins: behind the
-   content column it drops to a trace, so the text never sits on a pattern
-   while the page still reads as paper on a drafting surface.
-   The stops are tied to the 1180px shell, so on narrower screens the whole
-   grid simply stays at the low level. */
-.grid {
+/* One-point perspective grid drawn into #space by the script at the foot of
+   the page: a vanishing point sits just off each side of the window, so the
+   squares foreshorten and pack together towards the edges and the content
+   column reads as a sheet standing in a room. Nothing is drawn across the
+   middle, so text never sits on a grid. */
+#space {
   position: fixed;
   inset: 0;
-  pointer-events: none;
+  width: 100%;
+  height: 100%;
   z-index: 0;
-  background-image:
-    repeating-linear-gradient(0deg,  rgba(20, 45, 32, .055) 0 1px, transparent 1px 34px),
-    repeating-linear-gradient(90deg, rgba(20, 45, 32, .055) 0 1px, transparent 1px 34px);
-  -webkit-mask-image: linear-gradient(90deg,
-    rgba(0,0,0,1)    0,
-    rgba(0,0,0,1)    calc(50% - 660px),
-    rgba(0,0,0,.10)  calc(50% - 540px),
-    rgba(0,0,0,.06)  50%,
-    rgba(0,0,0,.10)  calc(50% + 540px),
-    rgba(0,0,0,1)    calc(50% + 660px),
-    rgba(0,0,0,1)    100%);
-          mask-image: linear-gradient(90deg,
-    rgba(0,0,0,1)    0,
-    rgba(0,0,0,1)    calc(50% - 660px),
-    rgba(0,0,0,.10)  calc(50% - 540px),
-    rgba(0,0,0,.06)  50%,
-    rgba(0,0,0,.10)  calc(50% + 540px),
-    rgba(0,0,0,1)    calc(50% + 660px),
-    rgba(0,0,0,1)    100%);
+  pointer-events: none;
+}
+
+@media (max-width: 880px) {
+  #space { display: none; }   /* no margins left to put a room in */
 }
 
 .shell {
