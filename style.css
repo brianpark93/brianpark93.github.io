@@ -768,16 +768,9 @@ body:not(.past-stage) .shell > .pad {
 .music-line a:hover { border-bottom-color: var(--accent); }
 
 .pick {
-  display: inline-block;
-  margin-left: 2px;
-  padding: 1px 8px;
-  border: 1px solid rgba(34, 82, 63, .2);
-  border-radius: 999px;
-  background: var(--accent-pale);
+  margin-left: 3px;
   color: var(--accent);
-  font-family: var(--mono);
-  font-size: 10.5px;
-  font-weight: 600;
+  font-size: .82em;
+  font-weight: 500;
   white-space: nowrap;
-  vertical-align: 1px;
 }
