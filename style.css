@@ -776,7 +776,16 @@ body:not(.past-stage) .shell > .pad {
 }
 
 /* --- scrambled email ---------------------------------------------------- */
-#emailText { font-variant-ligatures: none; }
+#emailText { font-variant-ligatures: none; white-space: pre; }
+#emailText .ch {
+  display: inline-block;
+  will-change: transform;
+  color: var(--ink-faint);
+}
+#emailText .ch.is-home { color: var(--ink); }
+#emailText a { color: var(--ink); text-decoration: none; }
+#emailText a:hover { color: var(--accent); }
+#emailReveal.is-going { opacity: 0; transition: opacity .3s ease; pointer-events: none; }
 #emailReveal {
   margin-left: 8px;
   padding: 0;

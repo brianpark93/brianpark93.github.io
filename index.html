@@ -527,7 +527,10 @@ var CLIPS = [
 
 <script>
 /* The address is held shuffled and is only put back together when the reader
-   asks, so it is never sitting in the markup for a harvester to lift. */
+   asks, so it is never sitting in the markup for a harvester to lift. The
+   letters slide to their places rather than snapping, which is a FLIP: measure
+   where each one is, reorder them, measure again, then animate the difference
+   away. */
 (function () {
   var SCRAMBLED = 'itrnap.c.aki3kbasakr9r@';
   var ORDER = [2, 16, 1, 4, 18, 5, 20, 19, 17, 3, 8, 14, 10, 12, 0, 6, 15, 13, 21, 22, 9, 7, 11];
@@ -536,19 +539,63 @@ var CLIPS = [
   var button = document.getElementById('emailReveal');
   if (!text || !button) return;
 
-  text.textContent = SCRAMBLED;
+  var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var spans = [];
+  for (var i = 0; i < SCRAMBLED.length; i++) {
+    var ch = document.createElement('span');
+    ch.className = 'ch';
+    ch.textContent = SCRAMBLED.charAt(i);
+    text.appendChild(ch);
+    spans.push(ch);
+  }
 
+  function link() {
+    var a = document.createElement('a');
+    a.href = 'mailto:' + spans.map(function (s) { return s.textContent; }).join('');
+    while (text.firstChild) a.appendChild(text.firstChild);
+    text.appendChild(a);
+  }
+
+  var done = false;
   button.addEventListener('click', function () {
-    var out = [];
-    for (var i = 0; i < ORDER.length; i++) out[ORDER[i]] = SCRAMBLED.charAt(i);
-    var address = out.join('');
+    if (done) return;
+    done = true;
+    button.classList.add('is-going');
 
-    var link = document.createElement('a');
-    link.href = 'mailto:' + address;
-    link.textContent = address;
-    text.textContent = '';
-    text.appendChild(link);
-    button.remove();
+    // where every letter starts
+    var from = spans.map(function (s) { return s.getBoundingClientRect().left; });
+
+    // put them in the right order
+    var target = [];
+    for (var i = 0; i < ORDER.length; i++) target[ORDER[i]] = spans[i];
+    target.forEach(function (s) { text.appendChild(s); });
+    spans = target;
+
+    if (calm) { button.remove(); link(); return; }
+
+    // where they ended up, then hold each one back where it was
+    var to = spans.map(function (s) { return s.getBoundingClientRect().left; });
+    spans.forEach(function (s, n) {
+      s.style.transition = 'none';
+      s.style.transform = 'translateX(' + (from[ORDER.indexOf(n)] - to[n]).toFixed(2) + 'px)';
+    });
+    void text.offsetWidth;
+
+    // and let them travel, left to right
+    var last = 0;
+    spans.forEach(function (s, n) {
+      var delay = n * 22;
+      last = Math.max(last, delay);
+      s.style.transition = 'transform .74s cubic-bezier(.2,.7,.2,1) ' + delay + 'ms, color .3s ease ' + delay + 'ms';
+      s.style.transform = 'translateX(0)';
+      s.classList.add('is-home');
+    });
+
+    setTimeout(function () {
+      button.remove();
+      spans.forEach(function (s) { s.style.transition = ''; s.style.transform = ''; });
+      link();
+    }, 740 + last + 60);
   });
 })();
 </script>
