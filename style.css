@@ -729,3 +729,32 @@ body:not(.past-stage) .shell > .pad {
   .stage__scroll svg { animation: none; }
   .stage__media video { transition: none; }
 }
+
+/* --- music: a short note and three marks, nothing more ------------------ */
+.music-line {
+  margin: 0 0 18px;
+  max-width: 74ch;
+  color: var(--ink-soft);
+}
+.music-line strong { color: var(--ink); font-weight: 650; }
+.music-line em { font-style: italic; }
+
+.music-links { display: flex; gap: 10px; }
+.music-links a {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink-faint);
+  transition: color .16s ease, border-color .16s ease, transform .16s ease;
+}
+.music-links svg { width: 18px; height: 18px; fill: currentColor; }
+.music-links a:hover {
+  color: var(--accent);
+  border-color: rgba(34, 82, 63, .32);
+  transform: translateY(-2px);
+}
+.music-links a:focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 3px; }
