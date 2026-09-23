@@ -271,9 +271,10 @@
     <section class="card" id="contact">
       <h2>Contact</h2>
       <div class="contact">
-        <a href="mailto:brianpark93@kaist.ac.kr">
-          <span class="k">Email</span><span class="v">brianpark93@kaist.ac.kr</span>
-        </a>
+        <span id="emailCard">
+          <span class="k">Email</span>
+          <span class="v"><span id="emailText"></span><button type="button" id="emailReveal">&larr; unscramble email</button></span>
+        </span>
         <a href="https://scholar.google.com/citations?user=QxKS0CwAAAAJ" target="_blank" rel="noopener noreferrer">
           <span class="k">Google Scholar</span><span class="v">Publications &amp; citations</span>
         </a>
@@ -521,6 +522,34 @@ var CLIPS = [
       }
     });
   }
+})();
+</script>
+
+<script>
+/* The address is held shuffled and is only put back together when the reader
+   asks, so it is never sitting in the markup for a harvester to lift. */
+(function () {
+  var SCRAMBLED = 'itrnap.c.aki3kbasakr9r@';
+  var ORDER = [2, 16, 1, 4, 18, 5, 20, 19, 17, 3, 8, 14, 10, 12, 0, 6, 15, 13, 21, 22, 9, 7, 11];
+
+  var text = document.getElementById('emailText');
+  var button = document.getElementById('emailReveal');
+  if (!text || !button) return;
+
+  text.textContent = SCRAMBLED;
+
+  button.addEventListener('click', function () {
+    var out = [];
+    for (var i = 0; i < ORDER.length; i++) out[ORDER[i]] = SCRAMBLED.charAt(i);
+    var address = out.join('');
+
+    var link = document.createElement('a');
+    link.href = 'mailto:' + address;
+    link.textContent = address;
+    text.textContent = '';
+    text.appendChild(link);
+    button.remove();
+  });
 })();
 </script>
 

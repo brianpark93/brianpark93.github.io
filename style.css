@@ -774,3 +774,19 @@ body:not(.past-stage) .shell > .pad {
   font-weight: 500;
   white-space: nowrap;
 }
+
+/* --- scrambled email ---------------------------------------------------- */
+#emailText { font-variant-ligatures: none; }
+#emailReveal {
+  margin-left: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: .92em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#emailReveal:hover { text-decoration: underline; }
+#emailReveal:focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 2px; }
