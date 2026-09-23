@@ -758,3 +758,26 @@ body:not(.past-stage) .shell > .pad {
   transform: translateY(-2px);
 }
 .music-links a:focus-visible { outline: 2px solid var(--accent-mid); outline-offset: 3px; }
+
+.music-line a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(34, 82, 63, .22);
+  transition: border-color .16s ease;
+}
+.music-line a:hover { border-bottom-color: var(--accent); }
+
+.pick {
+  display: inline-block;
+  margin-left: 2px;
+  padding: 1px 8px;
+  border: 1px solid rgba(34, 82, 63, .2);
+  border-radius: 999px;
+  background: var(--accent-pale);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
