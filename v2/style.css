@@ -612,32 +612,34 @@ footer.foot a { color: var(--ink-soft); }
 
 /* arrows */
 .stage__nav {
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   display: grid;
   place-items: center;
-  border: 1px solid var(--rule);
+  border: 1px solid rgba(34, 82, 63, .22);
   border-radius: 50%;
-  background: rgba(255, 255, 255, .8);
+  background: rgba(255, 255, 255, .93);
   -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
   color: var(--accent);
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(20, 40, 30, .05), 0 10px 24px -16px rgba(20, 40, 30, .5);
-  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  box-shadow: 0 2px 5px rgba(20, 40, 30, .09), 0 16px 32px -14px rgba(20, 40, 30, .5);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease,
+              background .18s ease, color .18s ease;
 }
 .stage__nav svg {
-  width: 21px; height: 21px;
+  width: 26px; height: 26px;
   fill: none; stroke: currentColor;
-  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+  stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round;
 }
 .stage__nav:hover {
-  background: #fff;
-  border-color: rgba(34, 82, 63, .35);
-  box-shadow: 0 2px 4px rgba(20, 40, 30, .07), 0 16px 30px -18px rgba(20, 40, 30, .6);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(20, 40, 30, .16), 0 20px 36px -16px rgba(20, 40, 30, .7);
 }
-.stage__nav--prev { margin-left: clamp(18px, 6vw, 150px); }
-.stage__nav--next { margin-right: clamp(18px, 6vw, 150px); }
+.stage__nav--prev { margin-left: clamp(22px, 9.5vw, 280px); }
+.stage__nav--next { margin-right: clamp(22px, 9.5vw, 280px); }
 .stage__nav--prev:hover { transform: translateX(-3px); }
 .stage__nav--next:hover { transform: translateX(3px); }
 .stage__nav:active { transform: scale(.94); }
@@ -679,15 +681,17 @@ footer.foot a { color: var(--ink-soft); }
   text-decoration: none;
 }
 .stage__scroll svg {
-  width: 15px; height: 15px;
+  width: 22px; height: 22px;
   fill: none; stroke: currentColor;
-  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
-  animation: nudge 2.1s ease-in-out infinite;
+  stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+  animation: nudge 1.7s cubic-bezier(.45, 0, .25, 1) infinite;
 }
 .stage__scroll:hover { color: var(--accent); }
 @keyframes nudge {
-  0%, 100% { transform: translateY(0); opacity: .55; }
-  50%      { transform: translateY(4px); opacity: 1; }
+  0%   { transform: translateY(-3px); opacity: 0; }
+  22%  { opacity: 1; }
+  62%  { transform: translateY(9px); opacity: 0; }
+  100% { transform: translateY(9px); opacity: 0; }
 }
 
 /* the notepad would sit on top of the stage, so it only appears once the
@@ -704,8 +708,8 @@ body:not(.past-stage) .shell > .pad {
 @media (max-width: 880px) {
   .stage { min-height: 72vh; padding: 20px 10px 14px; gap: 16px; }
   .stage__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
-  .stage__nav { width: 42px; height: 42px; }
-  .stage__nav svg { width: 17px; height: 17px; }
+  .stage__nav { width: 46px; height: 46px; }
+  .stage__nav svg { width: 20px; height: 20px; }
   .stage__media { height: 46vh; }
   .stage__slide video { height: 46vh; max-width: 88vw; }
   .stage__cap strong { font-size: 15px; }
