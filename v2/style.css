@@ -327,7 +327,7 @@ section.card {
 .pubs { counter-reset: pub; list-style: none; margin: 0; padding: 0; }
 .pubs li {
   position: relative;
-  padding: 15px 14px 15px 50px;
+  padding: 15px 14px 15px 56px;
   margin: 0 -14px;
   border-top: 1px solid var(--rule);
   font-size: 17.5px;
@@ -338,7 +338,7 @@ section.card {
   counter-increment: pub;
   content: counter(pub);
   position: absolute;
-  left: 14px; top: 17px;
+  left: 0; top: 17px;
   width: 31px; height: 31px;
   border-radius: 50%;
   background: #f0f2f1;
