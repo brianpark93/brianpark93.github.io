@@ -327,7 +327,8 @@ section.card {
 .pubs { counter-reset: pub; list-style: none; margin: 0; padding: 0; }
 .pubs li {
   position: relative;
-  padding: 15px 0 15px 50px;
+  padding: 15px 14px 15px 50px;
+  margin: 0 -14px;
   border-top: 1px solid var(--rule);
   font-size: 17.5px;
   line-height: 1.6;
@@ -337,7 +338,7 @@ section.card {
   counter-increment: pub;
   content: counter(pub);
   position: absolute;
-  left: 0; top: 15px;
+  left: 14px; top: 17px;
   width: 31px; height: 31px;
   border-radius: 50%;
   background: #f0f2f1;
@@ -349,8 +350,32 @@ section.card {
   place-items: center;
 }
 .pubs .t { color: var(--ink); }
-.pubs a.t { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(34,82,63,.28); }
-.pubs a.t:hover { border-bottom-color: var(--accent); }
+.pubs a.t { color: var(--ink); text-decoration: none; }
+
+/* a linked paper lifts as a whole and the title takes the accent; the anchor
+   is stretched over the row so anywhere on it is the click target */
+.pubs li.linked {
+  border-radius: 11px;
+  transition: transform .2s cubic-bezier(.22,.61,.36,1),
+              box-shadow .2s ease, background .2s ease;
+}
+.pubs li.linked a.t::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.pubs li.linked:hover {
+  transform: translateY(-3px);
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(20, 40, 30, .05), 0 16px 32px -20px rgba(20, 40, 30, .55);
+}
+.pubs li.linked:hover a.t { color: var(--accent); }
+.pubs li.linked:hover::before { border-color: rgba(34, 82, 63, .3); }
+.pubs li.linked:focus-within {
+  outline: 2px solid var(--accent-mid);
+  outline-offset: 2px;
+}
 .pubs .au { color: var(--ink-soft); }
 .pubs .au b { color: var(--ink); font-weight: 650; }
 .pubs .ve { color: var(--ink-soft); font-style: italic; }
