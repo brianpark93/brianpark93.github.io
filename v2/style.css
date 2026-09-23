@@ -612,8 +612,8 @@ footer.foot a { color: var(--ink-soft); }
 
 /* arrows */
 .stage__nav {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   display: grid;
   place-items: center;
   border: 1px solid rgba(34, 82, 63, .22);
@@ -628,7 +628,7 @@ footer.foot a { color: var(--ink-soft); }
               background .18s ease, color .18s ease;
 }
 .stage__nav svg {
-  width: 26px; height: 26px;
+  width: 31px; height: 31px;
   fill: none; stroke: currentColor;
   stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round;
 }
@@ -681,17 +681,15 @@ footer.foot a { color: var(--ink-soft); }
   text-decoration: none;
 }
 .stage__scroll svg {
-  width: 22px; height: 22px;
+  width: 26px; height: 26px;
   fill: none; stroke: currentColor;
   stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
-  animation: nudge 1.7s cubic-bezier(.45, 0, .25, 1) infinite;
+  animation: nudge 2.6s ease-in-out infinite;
 }
 .stage__scroll:hover { color: var(--accent); }
-@keyframes nudge {
-  0%   { transform: translateY(-3px); opacity: 0; }
-  22%  { opacity: 1; }
-  62%  { transform: translateY(9px); opacity: 0; }
-  100% { transform: translateY(9px); opacity: 0; }
+@keyframes nudge {           /* stays put and floats, never fades out */
+  0%, 100% { transform: translateY(-3px); opacity: .68; }
+  50%      { transform: translateY(6px);  opacity: 1; }
 }
 
 /* the notepad would sit on top of the stage, so it only appears once the
@@ -708,8 +706,8 @@ body:not(.past-stage) .shell > .pad {
 @media (max-width: 880px) {
   .stage { min-height: 72vh; padding: 20px 10px 14px; gap: 16px; }
   .stage__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
-  .stage__nav { width: 46px; height: 46px; }
-  .stage__nav svg { width: 20px; height: 20px; }
+  .stage__nav { width: 52px; height: 52px; }
+  .stage__nav svg { width: 23px; height: 23px; }
   .stage__media { height: 46vh; }
   .stage__slide video { height: 46vh; max-width: 88vw; }
   .stage__cap strong { font-size: 15px; }
