@@ -25,10 +25,6 @@
 
     <div class="stage__frame">
       <div class="stage__media" id="stageMedia"></div>
-      <figcaption class="stage__cap">
-        <strong id="stageTitle"></strong>
-        <span id="stageNote"></span>
-      </figcaption>
     </div>
 
     <button class="stage__nav stage__nav--next" type="button" aria-label="Next clip">
@@ -327,8 +323,6 @@ var CLIPS = [
 (function () {
   var media   = document.getElementById('stageMedia');
   var dots    = document.getElementById('stageDots');
-  var titleEl = document.getElementById('stageTitle');
-  var noteEl  = document.getElementById('stageNote');
   var stage   = document.getElementById('stage');
   if (!media || !CLIPS.length) return;
 
@@ -421,8 +415,6 @@ var CLIPS = [
       }
     });
 
-    titleEl.textContent = CLIPS[index].title;
-    noteEl.textContent  = CLIPS[index].note;
     Array.prototype.forEach.call(dots.children, function (b, n) {
       b.setAttribute('aria-selected', String(n === index));
     });
