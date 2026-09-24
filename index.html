@@ -345,11 +345,17 @@ var CLIPS = [
     video.src = 'media/' + clip.file + '.mp4';
     video.poster = 'media/' + clip.file + '.jpg';
     video.muted = true;
-    video.loop = true;
     video.playsInline = true;
     video.preload = n === index ? 'auto' : 'metadata';
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
+
+    // when a clip runs out the reel moves on by itself, the same way the
+    // arrows move it; the guard keeps a clip that ended off-stage from
+    // hijacking whatever is playing now
+    video.addEventListener('ended', function () {
+      if (slides[index] && slides[index].video === video) go(index + 1);
+    });
 
     fig.appendChild(video);
     fig.addEventListener('click', function () { if (n !== index) go(n); });
