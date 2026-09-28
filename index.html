@@ -601,6 +601,19 @@ var CLIPS = [
     }, 740 + last + 60);
   });
 })();
+
+/* The badges sit above the stretched link so their tooltips can appear, which
+   also takes them out of the link. Hand the click back to it. */
+(function () {
+  var list = document.querySelector('.pubs');
+  if (!list || !document.body.closest) return;
+  document.addEventListener('click', function (e) {
+    var badges = e.target.closest('.pubs li.linked .badges');
+    if (!badges) return;
+    var link = badges.closest('li').querySelector('a.t');
+    if (link) link.click();
+  });
+})();
 </script>
 
 </body>
