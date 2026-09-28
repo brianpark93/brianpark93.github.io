@@ -492,21 +492,57 @@ footer.foot a { color: var(--ink-soft); }
 
 .pad__toggle { display: none; }
 
-@media (max-width: 880px) {
+/* Below this the reading column would be squeezed by the sidebar -- on a
+   narrow window or a portrait monitor -- so the notepad moves on top and its
+   contents run across instead of down. */
+@media (max-width: 1040px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+    padding: 22px 20px 80px;
+  }
+  .shell > .pad { position: static; width: auto; }
+  .pad__sheet { padding: 14px 20px 16px; }
+  .pad__sheet::before { display: none; }      /* no margin rule on a wide sheet */
+
+  .pad__name { padding-left: 0; margin-bottom: 0; }
+  .pad__name small { display: inline; margin-left: 10px; }
+
+  .pad nav {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 22px;
+    padding-left: 0;
+  }
+  .pad nav a { padding-left: 15px; }
+  .pad nav a::before { left: 0; }
+
+  .pad__foot {
+    margin-top: 0;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 22px;
+  }
+  .pad__foot br { display: none; }
+
+  #space { display: none; }                   /* the margins are gone with it */
+}
+
+@media (max-width: 740px) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;
     padding: 24px 18px 72px;
   }
-  .pad { position: static; }
   .pad__sheet { padding-bottom: 16px; }
   .pad nav { display: none; }
-  .pad nav.is-open { display: block; }
+  .pad nav.is-open { display: flex; }
   .pad__toggle {
     display: block;
     width: 100%;
     text-align: left;
-    padding-left: 70px;
+    padding-left: 0;
     border: 0;
     background: none;
     font-family: var(--mono);
@@ -691,13 +727,18 @@ footer.foot a { color: var(--ink-soft); }
 
 /* the notepad would sit on top of the stage, so it only appears once the
    reader has scrolled past it */
-.shell > .pad {
-  transition: opacity .32s ease, transform .32s ease;
-}
-body:not(.past-stage) .shell > .pad {
-  opacity: 0;
-  transform: translateX(-14px);
-  pointer-events: none;
+/* Only while the notepad is pinned to the window does it need to keep out of
+   the stage's way; once it sits in the flow above the content there is
+   nothing to collide with. */
+@media (min-width: 1041px) {
+  .shell > .pad {
+    transition: opacity .32s ease, transform .32s ease;
+  }
+  body:not(.past-stage) .shell > .pad {
+    opacity: 0;
+    transform: translateX(-14px);
+    pointer-events: none;
+  }
 }
 
 @media (max-width: 880px) {
