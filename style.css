@@ -747,13 +747,41 @@ footer.foot a { color: var(--ink-soft); }
   }
 }
 
+/* On a phone the arrows cannot afford a column of their own: every pixel
+   they took beside the clip was a pixel the clip lost, and between the two of
+   them plus their margins they were leaving it barely half the window. They
+   come out of the row here and sit over the far edges instead, where the mask
+   has already faded the clip away, so it can run the full width. */
 @media (max-width: 880px) {
-  .stage { min-height: 72vh; padding: 20px 10px 14px; gap: 16px; }
-  .stage__inner { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
-  .stage__nav { width: 52px; height: 52px; }
-  .stage__nav svg { width: 23px; height: 23px; }
+  .stage { min-height: min(72vh, 720px); padding: 20px 0 14px; gap: 16px; }
+
+  .stage__inner {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .stage__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    width: 46px;
+    height: 46px;
+    margin: 0;                    /* the wide desktop insets are gone with it */
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, .84);
+  }
+  .stage__nav svg { width: 21px; height: 21px; }
+  .stage__nav--prev { left: 5px; }
+  .stage__nav--next { right: 5px; }
+
+  /* the vertical centring has to survive every transform the arrows carry */
+  .stage__nav--prev:hover { transform: translateY(-50%) translateX(-3px); }
+  .stage__nav--next:hover { transform: translateY(-50%) translateX(3px); }
+  .stage__nav:active { transform: translateY(-50%) scale(.94); }
+
   .stage__media { height: 46vh; }
-  .stage__slide video { height: 46vh; max-width: 88vw; }
+  .stage__slide video { height: 46vh; max-width: 94vw; border-radius: 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
