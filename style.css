@@ -368,7 +368,6 @@ section.card {
 /* the stretched anchor covers the whole row, badges included, which swallowed
    their tooltips -- lift them back above it */
 .pubs .badges { position: relative; z-index: 2; }
-.badge[title] { cursor: help; }
 .pubs li.linked:hover {
   transform: translateY(-3px);
   background: #fff;
