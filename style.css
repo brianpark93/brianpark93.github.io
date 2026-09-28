@@ -570,7 +570,11 @@ footer.foot a { color: var(--ink-soft); }
   position: relative;
   z-index: 1;
   overflow: hidden;          /* the neighbouring clips run past the window */
-  min-height: 86vh;
+  /* Tall enough to hold the fold on a normal window, but capped: the clip
+     itself stops growing at 640px, so on a very tall window -- a portrait
+     monitor -- an uncapped 86vh would centre the reel in a band twice its
+     own height and leave the page looking empty above and below it. */
+  min-height: min(86vh, 820px);
   display: flex;
   flex-direction: column;
   justify-content: center;
