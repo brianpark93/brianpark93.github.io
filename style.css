@@ -91,7 +91,7 @@ body {
 /* Once there is room, a matching empty track on the right puts the reading
    column dead centre in the window and lets the notepad sit out in the margin
    rather than beside the text. */
-@media (min-width: 1480px) {
+@media (min-width: 1480px) and (orientation: landscape) {
   .shell {
     /* matching tracks either side put the reading column dead centre in the
        window; the notepad is lifted out of the grid and pinned to the far
@@ -492,10 +492,11 @@ footer.foot a { color: var(--ink-soft); }
 
 .pad__toggle { display: none; }
 
-/* Below this the reading column would be squeezed by the sidebar -- on a
-   narrow window or a portrait monitor -- so the notepad moves on top and its
-   contents run across instead of down. */
-@media (max-width: 1040px) {
+/* The sidebar only earns its place on a window that is both wide and
+   landscape. Anything narrower than this, and any portrait window -- a
+   rotated monitor, a tall browser window -- puts the notepad on top instead,
+   with its contents running across rather than down. */
+@media (max-width: 1280px), (orientation: portrait) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
@@ -727,10 +728,11 @@ footer.foot a { color: var(--ink-soft); }
 
 /* the notepad would sit on top of the stage, so it only appears once the
    reader has scrolled past it */
-/* Only while the notepad is pinned to the window does it need to keep out of
-   the stage's way; once it sits in the flow above the content there is
-   nothing to collide with. */
-@media (min-width: 1041px) {
+/* Only while the notepad sits beside the content does it need to keep out of
+   the stage's way; once it moves on top, in the flow above everything else,
+   there is nothing to collide with. This is the exact complement of the
+   stacking rule above. */
+@media (min-width: 1281px) and (orientation: landscape) {
   .shell > .pad {
     transition: opacity .32s ease, transform .32s ease;
   }
