@@ -495,7 +495,8 @@ footer.foot a { color: var(--ink-soft); }
 /* The sidebar only earns its place on a window that is both wide and
    landscape. Anything narrower than this, and any portrait window -- a
    rotated monitor, a tall browser window -- puts the notepad on top instead,
-   with its contents running across rather than down. */
+   with its contents running across rather than down. The stage's arrows read
+   the same condition further down the file; keep the two in step. */
 @media (max-width: 1280px), (orientation: portrait) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
@@ -754,12 +755,15 @@ footer.foot a { color: var(--ink-soft); }
   }
 }
 
-/* The arrows only earn a column of their own beside the clip on a window that
-   is wide and landscape. On a phone, and on any portrait window -- a rotated
-   monitor as much as a handset -- that column is width the clip cannot spare.
-   They come out of the row and sit over the far edges instead, where the mask
-   has already faded the clip away, and the clip runs the full width. */
-@media (max-width: 880px), (orientation: portrait) {
+/* The arrows only earn a column of their own beside the clip on a window wide
+   enough to carry the notepad down its left-hand side. Anywhere the notepad
+   has moved on top, the window is already short of width and that column is
+   width the clip cannot spare, so the arrows come out of the row and sit just
+   inside the clip's own edges instead.
+
+   This condition is deliberately the same one that stacks the notepad, further
+   up the file. The two are a pair: change one and change the other. */
+@media (max-width: 1280px), (orientation: portrait) {
   .stage {
     --clip-w: min(94vw, 1180px);
     padding-left: 0;
