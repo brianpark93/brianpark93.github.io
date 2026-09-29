@@ -575,6 +575,14 @@ footer.foot a { color: var(--ink-soft); }
      monitor -- an uncapped 86vh would centre the reel in a band twice its
      own height and leave the page looking empty above and below it. */
   min-height: min(86vh, 820px);
+  /* How big the clip is allowed to get. The media box and the clip itself are
+     both sized from these two, so the box never reserves room the clip cannot
+     fill. Every clip is 1280x720, hence the 1.7778 below. */
+  --clip-w: min(68vw, 1180px);
+  --clip-h: min(62vh, 640px);
+  /* how wide the clip actually comes out, whichever of the two binds first --
+     the arrows are hung off this so they meet its edges, not the window's */
+  --clip-shown-w: min(var(--clip-w), calc(var(--clip-h) * 1.7778));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -603,7 +611,7 @@ footer.foot a { color: var(--ink-soft); }
 .stage__media {
   position: relative;
   width: 100%;
-  height: min(62vh, 640px);
+  height: min(var(--clip-h), calc(var(--clip-w) / 1.7778));
   perspective: 1400px;
   /* the mask is stretched to the window so the clips that overflow the
      column dissolve at the edges instead of being cut off */
@@ -631,9 +639,8 @@ footer.foot a { color: var(--ink-soft); }
 
 .stage__slide video {
   display: block;
-  height: min(62vh, 640px);
-  width: auto;
-  max-width: min(68vw, 1180px);
+  max-height: var(--clip-h);
+  max-width: var(--clip-w);
   border-radius: 14px;
   background: #f3f5f4;
   box-shadow:
@@ -747,13 +754,17 @@ footer.foot a { color: var(--ink-soft); }
   }
 }
 
-/* On a phone the arrows cannot afford a column of their own: every pixel
-   they took beside the clip was a pixel the clip lost, and between the two of
-   them plus their margins they were leaving it barely half the window. They
-   come out of the row here and sit over the far edges instead, where the mask
-   has already faded the clip away, so it can run the full width. */
-@media (max-width: 880px) {
-  .stage { min-height: min(72vh, 720px); padding: 20px 0 14px; gap: 16px; }
+/* The arrows only earn a column of their own beside the clip on a window that
+   is wide and landscape. On a phone, and on any portrait window -- a rotated
+   monitor as much as a handset -- that column is width the clip cannot spare.
+   They come out of the row and sit over the far edges instead, where the mask
+   has already faded the clip away, and the clip runs the full width. */
+@media (max-width: 880px), (orientation: portrait) {
+  .stage {
+    --clip-w: min(94vw, 1180px);
+    padding-left: 0;
+    padding-right: 0;
+  }
 
   .stage__inner {
     position: relative;
@@ -765,23 +776,34 @@ footer.foot a { color: var(--ink-soft); }
     position: absolute;
     top: 50%;
     z-index: 3;
-    width: 46px;
-    height: 46px;
-    margin: 0;                    /* the wide desktop insets are gone with it */
+    margin: 0;                    /* the wide landscape insets go with it */
     transform: translateY(-50%);
     background: rgba(255, 255, 255, .84);
   }
-  .stage__nav svg { width: 21px; height: 21px; }
-  .stage__nav--prev { left: 5px; }
-  .stage__nav--next { right: 5px; }
+  .stage__nav--prev { left: calc(50% - var(--clip-shown-w) / 2 + 6px); }
+  .stage__nav--next { right: calc(50% - var(--clip-shown-w) / 2 + 6px); }
 
   /* the vertical centring has to survive every transform the arrows carry */
   .stage__nav--prev:hover { transform: translateY(-50%) translateX(-3px); }
   .stage__nav--next:hover { transform: translateY(-50%) translateX(3px); }
   .stage__nav:active { transform: translateY(-50%) scale(.94); }
+}
 
-  .stage__media { height: 46vh; }
-  .stage__slide video { height: 46vh; max-width: 94vw; border-radius: 11px; }
+@media (max-width: 880px) {
+  .stage {
+    --clip-w: 94vw;
+    --clip-h: 46vh;
+    /* a 16:9 clip on a phone is only ever about 200px tall, so the stage asks
+       for far less height here than it does on a desktop -- otherwise the reel
+       sits marooned in the middle of an empty fold */
+    min-height: min(62vh, 560px);
+    padding-top: 20px;
+    padding-bottom: 14px;
+    gap: 16px;
+  }
+  .stage__nav { width: 46px; height: 46px; }
+  .stage__nav svg { width: 21px; height: 21px; }
+  .stage__slide video { border-radius: 11px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
