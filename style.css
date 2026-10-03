@@ -495,18 +495,18 @@ footer.foot a { color: var(--ink-soft); }
 /* The sidebar only earns its place on a window that is both wide and
    landscape. Any portrait window -- a rotated monitor, a tall browser window
    -- puts the notepad on top instead, with its contents running across rather
-   than down, and so does a window too narrow to seat it.
+   than down, and so does a window narrower than this.
 
-   That width is low because it has to be. The shell stops widening at 1160px,
-   so the reading column is already at its full 740px by then and a wider
-   window buys it nothing; what the threshold really marks is where the column
-   starts being eaten into. It is also easy to be wider than you look: a 1080p
-   laptop at 150% display scaling reports a 1280px viewport, and anything
-   above this that is genuinely too cramped is caught by the portrait rule.
+   The width is set higher than the layout strictly forces. The shell stops
+   widening at 1160px, so the reading column has its full 740px well before
+   this point and nothing is breaking at 1280px; the notepad simply reads
+   better across the top at laptop sizes than down the side. Note that a 1080p
+   laptop at 150% display scaling reports a 1280px viewport, so the common
+   laptop lands on the stacked side of this on purpose.
 
    The stage's arrows read the same condition further down the file; keep the
    two in step. */
-@media (max-width: 1040px), (orientation: portrait) {
+@media (max-width: 1280px), (orientation: portrait) {
   .shell {
     grid-template-columns: minmax(0, 1fr);
     gap: 22px;
@@ -772,7 +772,7 @@ footer.foot a { color: var(--ink-soft); }
 
    This condition is deliberately the same one that stacks the notepad, further
    up the file. The two are a pair: change one and change the other. */
-@media (max-width: 1040px), (orientation: portrait) {
+@media (max-width: 1280px), (orientation: portrait) {
   .stage {
     --clip-w: min(94vw, 1180px);
     padding-left: 0;
