@@ -335,7 +335,7 @@ section.card {
 }
 .pubs li:first-child { border-top: 0; }
 .pubs li::before {
-  counter-increment: pub;
+  counter-increment: pub -1;   /* the lists count down: newest highest, oldest 1 */
   content: counter(pub);
   position: absolute;
   left: 0; top: 17px;
